@@ -1,4 +1,4 @@
-SerialToKbd
+# SerialToKbd
 
 SerialToKbd is a simple helper program that allows MagTek USB check/credit card
 readers 22523003 and 22533007 to be used with software that doesn't specifically support check readers.
@@ -6,9 +6,9 @@ It is intended as a replacement for the MicrSend program that MagTek used to pro
 longer works with recent versions of Windows.
 
 You do NOT need this program if:
-    Your app supports the check reader directly (for example PowerChurch running locally)
-    You have a USB MiniMicr that does keyboard emulation (part number 22523009 and similar)
-    You have a keyboard "wedge" MiniMicr that plugs into the PS/2 keyboard port of your computer
+* Your app supports the check reader directly (for example PowerChurch running locally)
+* You have a USB MiniMicr that does keyboard emulation (part number 22523009 and similar)
+* You have a keyboard "wedge" MiniMicr that plugs into the PS/2 keyboard port of your computer
 
 This program MAY help if you have non-keyboard-emulation USB MiniMicr or a MiniMicr that plugs into
 the serial port on your computer AND your app doesn't support the MiniMicr directly (for example
@@ -43,7 +43,18 @@ Please post information as an "Issue" on the project github page:
 This program is derived from pieces of the open source stenography Plover project that turned out to have all the functionality
 needed to implement a replacement for MicrSend. Thanks to the Plover creators for their work!
 
-License: see License.txt
+License: see 'License.txt'
 
 Source code for the program may be found at the project github page:
     http://github.com/chauser/SerialToKbd
+
+## Running and Building
+
+### Run directly from source:
+    python SerialToKbd.py
+
+### Package as .exe
+    pyinstaller -F SerialToKbd.py
+
+The created .exe is dist/SerialToKbd.exe
+   
