@@ -56,5 +56,5 @@ Source code for the program may be found at the project github page:
 ### Package as .exe
     pyinstaller -F SerialToKbd.py
 
-The created .exe is dist/SerialToKbd.exe
+The created .exe is 'dist/SerialToKbd.exe'
    
