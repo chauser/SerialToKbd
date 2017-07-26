@@ -1,18 +1,19 @@
 # SerialToKbd
 
 SerialToKbd is a simple helper program that allows MagTek USB check/credit card
-readers 22523003 and 22533007 to be used with software that doesn't specifically support check readers.
+readers 22533003 and 22533007 to be used with software that doesn't specifically support check readers.
 It is intended as a replacement for the MicrSend program that MagTek used to provide but which no
 longer works with recent versions of Windows.
 
 You do NOT need this program if:
-* Your app supports the check reader directly (for example PowerChurch running locally)
-* You have a USB MiniMicr that does keyboard emulation (part number 22523009 and similar)
-* You have a keyboard "wedge" MiniMicr that plugs into the PS/2 keyboard port of your computer
+* Your app supports the check reader directly (for example PowerChurch versions 10, 11, and 11.5 running locally)
+* You have a USB MiniMicr that does keyboard emulation (part number 22523009 or 22523012 and similar)
+* You have a keyboard "wedge" MiniMicr (22520001) that plugs into the PS/2 keyboard port of your computer
 
 This program MAY help if you have non-keyboard-emulation USB MiniMicr or a MiniMicr that plugs into
 the serial port on your computer AND your app doesn't support the MiniMicr directly (for example
-PowerChurch online) (tested with 22533007 readers).
+PowerChurch Online and PowerChurch versions 8.5 and 9 running locally) (tested with 22533003 and 22533007
+readers and PowerChurch Online).
 
 Before using SerialToKbd you should install the MagTek drivers for your device.
 
@@ -28,7 +29,7 @@ The USB Mini Micr should be listed as such. A MiniMicr attached with a serial ca
 try launching SerialToKbd from a command prompt and passing the COM port name (e.g. COM1) as a parameter:
     SerialToKbd COM1
 
-You can test whether the MiniMicr, SerialToKbd, and other apps on your computer are working by
+You can test whether the MiniMicr and SerialToKbd are working by
 opening NotePad or WordPad and placing the cursor in it. Then scan a check: you should see the check
 information appear as characters in the document.
 
@@ -48,13 +49,25 @@ License: see 'License.txt'
 Source code for the program may be found at the project github page:
     http://github.com/chauser/SerialToKbd
 
-## Running and Building
+## Download
+Select the 'Releases' tab above and download the zip file for the latest release. Extract the contained files,
+then double-click 'SerialToKbd' to run the program. If you need to run from a command prompt in order to
+supply a 'COMn' parameter, open a command prompt, change directory to the folder where you extracted the files,
+and type
+    SerialToKbd COMn
+where 'n' is the number of the COM port you want to monitor.
 
-### Run directly from source:
+## Running from source and Building
+
+### Run directly from source (assumes you have python installed):
     python SerialToKbd.py
+or
+    python SerialToKbd.py COMn
 
-### Package as .exe
+### Package as .exe (assumes you have pyinstaller installed)
     pyinstaller -F SerialToKbd.py
 
 The created .exe is 'dist/SerialToKbd.exe'
+
+
    

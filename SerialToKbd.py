@@ -168,12 +168,19 @@ def get_option_info(port):
            }
 
 import serial
-def start_capture(port):
+def capture(port):
+        global keepAlive
         serial_params = get_option_info(port)
         try:
             serial_port = serial.Serial(**serial_params)
-        except (serial.SerialException, OSError):
+        except serial.SerialException as SE:
             print ('Can\'t open serial port: %s' % port)
+            print ("Serial exception occurred.")
+            print (SE.strerror)
+            return
+        except OSError as OSE:
+            print ("OSError occurred")
+            print (OSE.strerror)
             return
 
         if not serial_port.isOpen():
@@ -186,6 +193,7 @@ def start_capture(port):
 
                 # Grab data from the serial port.
                 raw = serial_port.read(1)
+                keepAlive = True
                 if not raw:
                     continue
 
@@ -193,28 +201,52 @@ def start_capture(port):
                 kbd_emulator.send_string(chr(raw[0]))
         except KeyboardInterrupt:
             pass
+
+import time
+def keepAliveThread():
+    global keepAlive
+    keepAlive = True
+    while keepAlive:
+        keepAlive = False
+        time.sleep(5)
                 
+    print("\n%s stopped responding. Was the device unplugged?" % device)
+    print("Close and restart this program when the device is again available")
+    # sys.stdin.readline()
+
+
 import serial.tools.list_ports as LP
 import sys
-device = None
-if len(sys.argv) > 1:
-    device = sys.argv[1]
-else:
-    print ("Looking for a Magtek reader")
-    ports = LP.comports()
-    for p in ports:
-        if p.manufacturer=='MagTek':
-           print("Found a MagTek reader with Vendor ID: 0x%x and Product ID: 0x%x on %s" %
-                 (p.vid, p.pid, p.device))
-           device=p.device
-if device:
-    print("Opening reader on %s" % device)
-    print("Type Ctrl-C or close this window to exit")
-    start_capture(device)
-else:
-    print("Did not find a supported reader; Use the device manager to identify the COM port")
-    print("and then enter the command")
-    print("    SerialToKbd COMn")
-    print("where n is the number of the COM port you identified in the device manager")
-    sys.stdin.readline()
+
+import threading
+if __name__ == "__main__":
+    device = None
+    if len(sys.argv) > 1:
+        device = sys.argv[1]
+    else:
+        print ("Looking for a Magtek reader")
+        ports = LP.comports()
+        for p in ports:
+            if p.manufacturer=='MagTek':
+               print("Found a MagTek reader with Vendor ID: 0x%x and Product ID: 0x%x on %s" %
+                     (p.vid, p.pid, p.device))
+               device=p.device
+    try:
+        if device:
+            print("Opening reader on %s" % device)
+            print("Type Ctrl-C or close this window to exit")
+            # This whole multi-threaded design is ridiculous, but required,
+            # because when the device is unplugged, and even perhaps
+            # when the system sleeps or hibernates, the serial.read() function
+            # hangs, never timing out again.
+            threading.Thread(target=keepAliveThread,daemon=True).start()
+            capture(device)
+        else:
+            print("Did not find a supported reader; Use the device manager to identify the COM port")
+            print("and then enter the command")
+            print("    SerialToKbd COMn")
+            print("where n is the number of the COM port you identified in the device manager")
+            sys.stdin.readline()
+    except KeyboardInterrupt:
+        pass
 
